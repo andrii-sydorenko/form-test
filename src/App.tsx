@@ -1,5 +1,5 @@
 import { useState, type ChangeEvent } from "react";
-import "./styles.css";
+import "./index.css";
 
 const COMPANIES = [
   { name: "dev-vortexrestaurantequipment.pantheon.io", techSpend: 0 },
