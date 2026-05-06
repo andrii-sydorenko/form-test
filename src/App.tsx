@@ -21,16 +21,16 @@ const RowItem = ({ name, techSpend }: { name: string, techSpend: number }) => {
   };
 
   return (
-    <div
+    <form
       style={{
         display: "flex",
         justifyContent: "space-between",
         marginBottom: 10,
       }}
     >
-      <span>{name}</span>
-      <input value={val} onChange={handleChange} />
-    </div>
+      <label>{name}</label>
+      <input aria-label={name} value={val} onChange={handleChange} />
+    </form>
   );
 };
 
