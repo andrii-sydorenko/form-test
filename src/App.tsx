@@ -12,12 +12,12 @@ const COMPANIES = [
 ];
 
 const RowItem = ({ name, techSpend }: { name: string, techSpend: number }) => {
-  const [val, setVal] = useState(techSpend);
+  const [val, setVal] = useState<string | number>(techSpend);
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { value } = e.target;
 
-    setVal(Number(value));
+    setVal(value.toString());
   };
 
   return (
