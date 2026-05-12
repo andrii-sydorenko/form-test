@@ -1,7 +1,9 @@
 import { useState, type ChangeEvent } from "react";
 import "./index.css";
 
-const COMPANIES = [
+type Company = { name: string; techSpend: number };
+
+const COMPANIES: Company[] = [
   { name: "dev-vortexrestaurantequipment.pantheon.io", techSpend: 0 },
   { name: "goaccess.kpmg.com", techSpend: 0 },
   { name: "qa-dashboard-edge.ihg.com", techSpend: 0 },
@@ -11,35 +13,136 @@ const COMPANIES = [
   { name: "agilent.com", techSpend: 0 },
 ];
 
-const RowItem = ({ name, techSpend }: { name: string, techSpend: number }) => {
-  const [val, setVal] = useState<string | number>(techSpend);
-
-  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
-    const { value } = e.target;
-
-    setVal(value.toString());
-  };
-
+const RowItem = ({
+  name,
+  techSpend,
+  onClick,
+}: {
+  name: string;
+  techSpend: number | string;
+  onClick: () => void;
+}) => {
   return (
-    <form
+    <div
+      role="button"
+      tabIndex={0}
+      onClick={onClick}
+      onKeyDown={(e) => {
+        if (e.key === "Enter" || e.key === " ") {
+          e.preventDefault();
+          onClick();
+        }
+      }}
       style={{
         display: "flex",
         justifyContent: "space-between",
+        alignItems: "center",
         marginBottom: 10,
+        padding: "8px 12px",
+        border: "1px solid var(--border)",
+        borderRadius: 6,
+        cursor: "pointer",
       }}
     >
-      <label>{name}</label>
-      <input aria-label={name} value={val} onChange={handleChange} />
-    </form>
+      <span>{name}</span>
+      <span style={{ fontFamily: "var(--mono)" }}>{techSpend}</span>
+    </div>
+  );
+};
+
+const EditModal = ({
+  company,
+  onClose,
+  onSave,
+}: {
+  company: Company;
+  onClose: () => void;
+  onSave: (value: string) => void;
+}) => {
+  const [val, setVal] = useState<string>(String(company.techSpend));
+
+  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
+    setVal(e.target.value);
+  };
+
+  return (
+    <div
+      onClick={onClose}
+      style={{
+        position: "fixed",
+        inset: 0,
+        background: "rgba(0,0,0,0.5)",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        zIndex: 1000,
+      }}
+    >
+      <form
+        onClick={(e) => e.stopPropagation()}
+        onSubmit={(e) => {
+          e.preventDefault();
+          onSave(val);
+        }}
+        style={{
+          background: "var(--bg)",
+          border: "1px solid var(--border)",
+          borderRadius: 8,
+          padding: 24,
+          minWidth: 320,
+          boxShadow: "var(--shadow)",
+          textAlign: "left",
+        }}
+      >
+        <h2>{company.name}</h2>
+        <label
+          style={{ display: "flex", flexDirection: "column", gap: 6, marginTop: 12 }}
+        >
+          Value
+          <input
+            autoFocus
+            aria-label="value"
+            value={val}
+            onChange={handleChange}
+          />
+        </label>
+        <div style={{ display: "flex", gap: 8, justifyContent: "flex-end", marginTop: 16 }}>
+          <button type="button" onClick={onClose}>
+            Cancel
+          </button>
+          <button type="submit">Save</button>
+        </div>
+      </form>
+    </div>
   );
 };
 
 export default function App() {
+  const [values, setValues] = useState<Record<string, string | number>>(() =>
+    Object.fromEntries(COMPANIES.map((c) => [c.name, c.techSpend])),
+  );
+  const [editing, setEditing] = useState<Company | null>(null);
+
   return (
     <div className="App">
-      {COMPANIES.map(({ name, techSpend }) => {
-        return <RowItem name={name} techSpend={techSpend} />;
-      })}
+      {COMPANIES.map((c) => (
+        <RowItem
+          key={c.name}
+          name={c.name}
+          techSpend={values[c.name]}
+          onClick={() => setEditing(c)}
+        />
+      ))}
+      {editing && (
+        <EditModal
+          company={editing}
+          onClose={() => setEditing(null)}
+          onSave={(value) => {
+            setValues((prev) => ({ ...prev, [editing.name]: value }));
+            setEditing(null);
+          }}
+        />
+      )}
     </div>
   );
 }
