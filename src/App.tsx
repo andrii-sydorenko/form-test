@@ -16,36 +16,32 @@ const COMPANIES: Company[] = [
 const RowItem = ({
   name,
   techSpend,
-  onClick,
+  onEdit,
 }: {
   name: string;
   techSpend: number | string;
-  onClick: () => void;
+  onEdit: () => void;
 }) => {
   return (
     <div
-      role="button"
-      tabIndex={0}
-      onClick={onClick}
-      onKeyDown={(e) => {
-        if (e.key === "Enter" || e.key === " ") {
-          e.preventDefault();
-          onClick();
-        }
-      }}
       style={{
         display: "flex",
         justifyContent: "space-between",
         alignItems: "center",
+        gap: 12,
         marginBottom: 10,
         padding: "8px 12px",
         border: "1px solid var(--border)",
         borderRadius: 6,
-        cursor: "pointer",
       }}
     >
       <span>{name}</span>
-      <span style={{ fontFamily: "var(--mono)" }}>{techSpend}</span>
+      <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+        <span style={{ fontFamily: "var(--mono)" }}>{techSpend}</span>
+        <button type="button" onClick={onEdit}>
+          Edit
+        </button>
+      </div>
     </div>
   );
 };
@@ -130,7 +126,7 @@ export default function App() {
           key={c.name}
           name={c.name}
           techSpend={values[c.name]}
-          onClick={() => setEditing(c)}
+          onEdit={() => setEditing(c)}
         />
       ))}
       {editing && (
