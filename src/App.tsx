@@ -4,13 +4,12 @@ import "./index.css";
 type Company = { name: string; techSpend: number };
 
 const COMPANIES: Company[] = [
-  { name: "dev-vortexrestaurantequipment.pantheon.io", techSpend: 0 },
-  { name: "goaccess.kpmg.com", techSpend: 0 },
+  { name: "sandbox.abbi.pearson.com", techSpend: 0 },
+  { name: "test-doggone-data.pantheon.io", techSpend: 0 },
   { name: "qa-dashboard-edge.ihg.com", techSpend: 0 },
-  { name: "oecexcellence.gehealthcare.com", techSpend: 0 },
   { name: "ads.scotiabank.com/*", techSpend: 0 },
+  { name: "oecexcellence.gehealthcare.com", techSpend: 0 },
   { name: "onboardinghub-stage.mastercard.com", techSpend: 0 },
-  { name: "agilent.com", techSpend: 0 },
 ];
 
 const RowItem = ({
